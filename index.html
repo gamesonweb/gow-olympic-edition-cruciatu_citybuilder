@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Games On Web</title>
+        <link rel="stylesheet" href="./assets/css/style.css">
+        <script src="https://cdn.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+        <style>
+            body,#renderCanvas { width: 100%; height: 100%;}
+        </style>
+    </head>
+<body>
+    <div id="ui-container">
+        <div id="resources">
+          <span id="happiness">Bonheur : 0</span>
+          <span id="food">Nourriture : 0</span>
+          <span id="wood">Bois : 0</span>
+          <span id="gold">Or : 0</span>
+          <span id="population">Population : 0</span>
+        </div>
+    </div>
+    <div id="building-container">
+      <div id="buildings">
+        <button id="buildingButton" class="right-button">Building</button>
+        <button id="houseButton" class="right-button">House</button>
+        <button id="deleteButton" class="right-button">Delete</button>
+      </div>
+    </div>
+    <canvas id="renderCanvas"></canvas>
+    <script type="module" src="./js/script.js"></script>
+</body>
+</html>

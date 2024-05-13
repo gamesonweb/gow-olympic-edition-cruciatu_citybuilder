@@ -1,4 +1,4 @@
-# DS4H_GamesOnWeb_2024
+![image](https://github.com/gamesonweb/gow-olympic-edition-cruciatu_citybuilder/assets/95910603/589c4877-5ed6-498e-8c49-82bbf7bc5857)# DS4H_GamesOnWeb_2024
 
 ## Thème : Olympique
 
@@ -13,4 +13,4 @@ Bienvenue sur le dépôt du projet DS4H_GamesOnWeb_2024. Ce projet vise à explo
 [Dossier Google Docs](https://docs.google.com/document/d/1p-KZWzWqPT31HdJh4cqCU7tgUtPh2aWgRMaqlv4_-EA/edit?usp=sharing)
 
 ### Liens 
-https://julienbru.github.io/DS4H_GamesOnWeb_2024/
+https://gamesonweb.github.io/gow-olympic-edition-cruciatu_citybuilder/

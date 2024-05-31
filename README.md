@@ -1,4 +1,4 @@
-![image](https://github.com/gamesonweb/gow-olympic-edition-cruciatu_citybuilder/assets/95910603/589c4877-5ed6-498e-8c49-82bbf7bc5857)# DS4H_GamesOnWeb_2024
+# DS4H_GamesOnWeb_2024
 
 ## Thème : Olympique
 

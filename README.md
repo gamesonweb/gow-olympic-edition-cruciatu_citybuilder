@@ -17,5 +17,7 @@ Développer et améliorer la ville de *Cruciatu* dans l'optique de créer les to
 ### Documentation
 [Dossier Google Docs](https://docs.google.com/document/d/1p-KZWzWqPT31HdJh4cqCU7tgUtPh2aWgRMaqlv4_-EA/edit?usp=sharing)
 
+### Vidéo
+[Démonstration de gameplay](https://youtu.be/jcNvJed-ys4)
 ### Liens 
 https://gamesonweb.github.io/gow-olympic-edition-cruciatu_citybuilder/

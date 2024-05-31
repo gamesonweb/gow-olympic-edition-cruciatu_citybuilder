@@ -14,14 +14,15 @@ var materialManager = new MaterialManager(scene);
 //display debug layer
 //scene.debugLayer.show();
 
-//var camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2, 10, new BABYLON.Vector3(0, 100, 110), scene);
-//camera.setTarget(BABYLON.Vector3.Zero());
-//camera.attachControl(canvas, true);
-
 var camera = createCamera(scene, canvas, engine);
 
-
 var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+
+BABYLON.SceneLoader.ImportMesh("", "assets/buildings/colossus.glb", "", scene, function (meshes) {
+    var colossus = meshes[0];
+    colossus.position = new BABYLON.Vector3(250, -20, 80);
+    colossus.scaling = new BABYLON.Vector3(80, 80, 80);
+});
 
 // import de la carte
 /*
@@ -30,6 +31,7 @@ BABYLON.SceneLoader.ImportMesh("", "assets/map/Map1.glb", "", scene, function (m
     map[0].scaling = new BABYLON.Vector3(5, 5, 5);
 });
 */
+
 // Ground
 var groundTexture = new BABYLON.Texture("assets/textures/water.png", scene);
 groundTexture.vScale = groundTexture.uScale = 4.0;
@@ -152,7 +154,6 @@ function updateWoodDisplay() {
     document.getElementById("wood").innerText = "Bois: " + wood;
 }
 
-
 /**Couper un arbre et ajouter le bois recupere*/
 function cutTree(tree) {
     tree.dispose();
@@ -184,8 +185,6 @@ function cutTree(tree) {
     }, 30000);
 
 }
-
-
 
 /**Creer des particules de fumée 
  * @param {BABYLON.Vector3} position - Position de la fumée

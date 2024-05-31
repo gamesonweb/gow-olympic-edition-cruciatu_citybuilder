@@ -24,6 +24,25 @@ BABYLON.SceneLoader.ImportMesh("", "assets/buildings/colossus.glb", "", scene, f
     colossus.scaling = new BABYLON.Vector3(80, 80, 80);
 });
 
+/*
+// Skybox
+var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size: 1000.0}, scene);
+var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+skyboxMaterial.backFaceCulling = false;
+
+// Assurez-vous que les noms des fichiers de texture et leurs extensions sont corrects
+skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("assets/skybox", scene, [
+    "_px.jpg", "_py.jpg", "_pz.jpg",
+    "_nx.jpg", "_ny.jpg", "_nz.jpg"
+]);
+
+skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+
+skybox.material = skyboxMaterial;
+*/
+
 // import de la carte
 /*
 BABYLON.SceneLoader.ImportMesh("", "assets/map/Map1.glb", "", scene, function (map) {

@@ -32,4 +32,8 @@ export default class pnj {
             this.elapsedTime = 0;
         }
     }
+
+    delete(){
+        this.model.dispose();
+    }
 }

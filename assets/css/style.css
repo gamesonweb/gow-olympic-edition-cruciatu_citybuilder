@@ -64,4 +64,28 @@ button {
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
+    border-radius: 12px;
+}
+
+#container {
+    position: absolute;
+    top: 0; /* Change from bottom: 0; to top: 0; */
+    left: 0;
+    width: 100%;
+    margin-top: 4em;
+    color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: row; /* Add this to align items from left to right */
+    justify-content: space-around;
+}
+#container > div {
+    margin: 5px;
+}
+
+#display span {
+    display: inline-block; /* Change from display: block; to display: inline-block; */
+    padding: 5px;
+    margin: 5px;
+    color: transparent;
 }

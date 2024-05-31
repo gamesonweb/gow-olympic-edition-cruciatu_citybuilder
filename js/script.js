@@ -104,13 +104,22 @@ var goldProductionRates = {
     15: 3 //batiment de taille 15 : +3 or par seconde
 };
 
-// Boutons pour changer la taille des batiments
+var selectedMaterial = 0;
+
 var buildingButton = document.getElementById("buildingButton");
 buildingButton.addEventListener("click", function () {
-    houseSize = 15; // Taille pour les bâtiments
+    displayBuildingOptions();
+    deleteMode = false;
+    console.log("Building options");
+});
+
+var skyscraperButton = document.getElementById("skyscraperButton");
+skyscraperButton.addEventListener("click", function () {
+    houseSize = 15; // taille
     selectedBuildingType = "building"; // Définit le type comme bâtiment
     deleteMode = false;
-    console.log("Building Mode");
+    console.log("Skyscraper Mode");
+    displayMaterialOptions();
 });
 
 var houseButton = document.getElementById("houseButton");
@@ -119,10 +128,28 @@ houseButton.addEventListener("click", function () {
     selectedBuildingType = "house"; // Définit le type comme maison
     deleteMode = false;
     console.log("House Mode");
+    displayMaterialOptions();
 });
+
+var woodButton = document.getElementById("woodBt");
+woodButton.addEventListener("click", function () {
+    selectedMaterial = 2;
+    deleteMode = false;
+    console.log("Wood Mode");
+    displayMaterialOptions();
+});
+var stoneButton = document.getElementById("stoneBt");
+stoneButton.addEventListener("click", function () {
+    selectedMaterial = 1;
+    deleteMode = false;
+    console.log("Stone Mode");
+    displayMaterialOptions();
+});
+
 var treeButton = document.getElementById("treeButton");
 treeButton.addEventListener("click", function () {
     deleteMode = 'cutting';
+    hideMaterialOptions();
 
     scene.onPointerDown = function (evt, pickResult) {
         if (pickResult.hit && pickResult.pickedMesh.name.startsWith("tree")) {
@@ -135,15 +162,89 @@ treeButton.addEventListener("click", function () {
 var deleteButton = document.getElementById("deleteButton");
 deleteButton.addEventListener("click", function () {
     deleteMode = true;
+    hideMaterialOptions();
     console.log("Delete Mode");
     //event pour supprimer un batiment
     scene.onPointerDown = function (evt, pickResult) {
         if (deleteMode && pickResult.hit && pickResult.pickedMesh.name.startsWith("building_") || pickResult.pickedMesh.name.startsWith("house_")) {
             var selectedBuilding = pickResult.pickedMesh;
-            deleteHouse(selectedBuilding);
+            deleteHouse(selectedBuilding, pickResult.pickedMesh.name.startsWith("building_"));
         }
     }
 });
+
+
+
+function showPlusNumber(num, elementId) {
+    // Créez un nouvel élément div
+    var div = document.createElement("div");
+
+    // Ajoutez le texte "+[num]" à l'élément div
+    div.textContent = "+" + num;
+
+    // Ajoutez des styles à l'élément div
+    div.style.position = "absolute";
+    div.style.color = "green";
+    div.style.fontSize = "20px";
+
+    // Positionnez l'élément div près de l'élément avec l'ID spécifié
+    var element = document.getElementById(elementId);
+    var rect = element.getBoundingClientRect();
+    div.style.left = rect.left + "px";
+    div.style.top = rect.top - 20 + "px"; // Positionnez le div un peu au-dessus de l'élément
+
+    // Ajoutez l'élément div au corps du document
+    document.body.appendChild(div);
+
+    // Faites disparaître l'élément div après 0.5 secondes
+    setTimeout(function () {
+        div.remove();
+    }, 500);
+}
+
+function showMinusNumber(num, elementId) {
+    // Créez un nouvel élément div
+    var div = document.createElement("div");
+
+    // Ajoutez le texte "+[num]" à l'élément div
+    div.textContent = "-" + num;
+
+    // Ajoutez des styles à l'élément div
+    div.style.position = "absolute";
+    div.style.color = "red";
+    div.style.fontSize = "20px";
+
+    // Positionnez l'élément div près de l'élément avec l'ID spécifié
+    var element = document.getElementById(elementId);
+    var rect = element.getBoundingClientRect();
+    div.style.left = rect.left + "px";
+    div.style.top = rect.top - 20 + "px"; // Positionnez le div un peu au-dessus de l'élément
+
+    // Ajoutez l'élément div au corps du document
+    document.body.appendChild(div);
+
+    // Faites disparaître l'élément div après 0.5 secondes
+    setTimeout(function () {
+        div.remove();
+    }, 500);
+}
+
+
+function hideMaterialOptions() {
+    document.getElementById('materialSelection').style.display = 'none';
+    document.getElementById('buildingType').style.display = 'none';
+}
+
+function displayMaterialOptions() {
+    document.getElementById('materialSelection').style.display = 'block';
+    document.getElementById('buildingType').style.display = 'block';
+}
+
+function displayBuildingOptions() {
+    document.getElementById('buildingType').style.display = 'block';
+    document.getElementById('materialSelection').style.display = 'none';
+}
+
 
 /**  Mise à jour de l'affichage de l'or*/
 function updateGoldDisplay() {
@@ -153,6 +254,12 @@ function updateGoldDisplay() {
 function updateWoodDisplay() {
     document.getElementById("wood").innerText = "Bois: " + wood;
 }
+/**Mise à jour de l'affichage de la population */
+function updatePopulationDisplay() {
+    document.getElementById("population").innerText = "Population : " + population;
+}
+
+
 
 /**Couper un arbre et ajouter le bois recupere*/
 function cutTree(tree) {
@@ -161,6 +268,7 @@ function cutTree(tree) {
     //random entre 1 et 5
     var woodAmount = Math.floor(Math.random() * 5) + 1;
     wood += woodAmount;
+    showPlusNumber(woodAmount, "woodDisplay");
     updateWoodDisplay();
 
     // Supprimer l'arbre de la liste
@@ -176,7 +284,7 @@ function cutTree(tree) {
 
 
         //particules lors de la creation d'un arbre
-        var smoke = createSmokeParticles(new BABYLON.Vector3(newTree.position.x, newTree.position.y, newTree.position.z),"tree");
+        var smoke = createSmokeParticles(new BABYLON.Vector3(newTree.position.x, newTree.position.y, newTree.position.z), "tree");
         smoke.start();
         setTimeout(function () {
             smoke.stop();
@@ -189,7 +297,7 @@ function cutTree(tree) {
 /**Creer des particules de fumée 
  * @param {BABYLON.Vector3} position - Position de la fumée
  */
-function createSmokeParticles(position,type) {
+function createSmokeParticles(position, type) {
     var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
     particleSystem.particleTexture = new BABYLON.Texture("assets/textures/smoke.jpg", scene);
 
@@ -198,12 +306,11 @@ function createSmokeParticles(position,type) {
     particleSystem.minEmitBox = new BABYLON.Vector3(-emitBoxSize, 0, -emitBoxSize);
     particleSystem.maxEmitBox = new BABYLON.Vector3(emitBoxSize, 0, emitBoxSize);
     if (type == "house") {
-    particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1); // Blanc
-    particleSystem.color2 = new BABYLON.Color4(1, 1, 1, 1); // Blanc
-    }
-    else {
-    particleSystem.color1 = new BABYLON.Color4(1, 0.5, 0, 1);
-    particleSystem.color2 = new BABYLON.Color4(1, 0.5, 0, 1);
+        particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1); // Blanc
+        particleSystem.color2 = new BABYLON.Color4(1, 1, 1, 1); // Blanc
+    } else {
+        particleSystem.color1 = new BABYLON.Color4(1, 0.5, 0, 1);
+        particleSystem.color2 = new BABYLON.Color4(1, 0.5, 0, 1);
     }
     particleSystem.colorDead = new BABYLON.Color4(0, 0, 0, 0.1); // Transparence
 
@@ -265,7 +372,7 @@ function addClickActionToCells(numCells) {
                     var x = parseInt(coords[0]);
                     var z = parseInt(coords[1]);
                     if (!deleteMode) {
-                        addHouse(x, z, selectedBuildingType);
+                        addHouse(x, z, selectedBuildingType, selectedMaterial);
                     }
                 }
             }));
@@ -273,57 +380,108 @@ function addClickActionToCells(numCells) {
     }
 }
 
-
-
 /**ajout d'une maison 
  * @param {int} x - position x du batiment
  * @param {int} z - position z du batiment
  * @param {string} type - type de batiment
+ * @param {string} materiel - materiel du batiment 1- pierre 2- bois
  */
-function addHouse(x, z, type) {
+function addHouse(x, z, type, materiel) {
+    console.log(materiel)
     var newPosX = (x - 12) * 5;
     var newPosZ = (z - 12) * 5;
 
-    if (isBuildingPositionValid(x, z) && gold > 0) {
-        var buildingName = type === "building" ? "building_" : "house_";
-        var house = BABYLON.MeshBuilder.CreateBox(buildingName + x + "_" + z, {
-            size: houseSize
-        }, scene);
-        house.position.x = newPosX;
-        house.position.y = 1.5;
-        house.position.z = newPosZ;
-        //On utilise darkGreenMaterial pour les buildings et purpleMaterial pour les houses
-        house.material = type === "building" ? materialManager.getMaterial("darkGreenMaterial") : materialManager.getMaterial("purpleMaterial");
-        //Si c'est un building alors on enlève 20 d'or, si c'est une house alors on enlève 10 d'or
-        gold -= type === "building" ? 20 : 10;
-        updateGoldDisplay();
-        var productionIntervalId = startGoldProduction(houseSize);
-        house.productionIntervalId = productionIntervalId;
-        //particules lors de la creation d'un batiment
-        var smoke = createSmokeParticles(new BABYLON.Vector3(house.position.x, house.position.y + houseSize / 2, house.position.z),"house");
-        smoke.start();
-        setTimeout(function () {
-            smoke.stop();
-        }, 50);
+    if (materiel == 1) {
+        if (isBuildingPositionValid(x, z) && gold > 0) {
+            var buildingName = type === "building" ? "building_" : "house_";
+            var house = BABYLON.MeshBuilder.CreateBox(buildingName + x + "_" + z, {
+                size: houseSize
+            }, scene);
+            house.position.x = newPosX;
+            house.position.y = 1.5;
+            house.position.z = newPosZ;
+            //On utilise darkGreenMaterial pour les buildings et purpleMaterial pour les houses
+            house.material = type === "building" ? materialManager.getMaterial("darkGreenMaterial") : materialManager.getMaterial("purpleMaterial");
+            //Si c'est un building alors on enlève 20 d'or, si c'est une house alors on enlève 10 d'or
+            var goldDeducted = type === "building" ? 20 : 10;
+            gold -= goldDeducted;
+            showMinusNumber(goldDeducted, "goldDisplay");
+            updateGoldDisplay();
+            var productionIntervalId = startGoldProduction(houseSize);
+            house.productionIntervalId = productionIntervalId;
+            //particules lors de la creation d'un batiment
+            var smoke = createSmokeParticles(new BABYLON.Vector3(house.position.x, house.position.y + houseSize / 2, house.position.z), "house");
+            smoke.start();
+            setTimeout(function () {
+                smoke.stop();
+            }, 50);
 
-        //creation d'un pnj
-        BABYLON.SceneLoader.ImportMesh("", "assets/pnj/pnj.glb", "", scene, function (meshes) {
-            var model = meshes[0];
-            pnj = new Pnj(scene, model, house.position);
-            // Ajoutez le nouveau PNJ au tableau
-            pnjs.push(pnj);
-            population += 1;
-            document.getElementById("population").innerText = "Population : " + population;
-        });
+            //creation d'un pnj
+            var pnjCount = type === "house" ? 1 : 3;
+            showPlusNumber(pnjCount, "populationDisplay");
+            for (var i = 0; i < pnjCount; i++) {
+                BABYLON.SceneLoader.ImportMesh("", "assets/pnj/pnj.glb", "", scene, function (meshes) {
+                    var model = meshes[0];
+                    pnj = new Pnj(scene, model, house.position);
+                    // Ajoutez le nouveau PNJ au tableau
+                    pnjs.push(pnj);
+                    population += 1;
+                    updatePopulationDisplay();
+                });
+            }
+        }
+    } else if (materiel == 2) {
+        if (isBuildingPositionValid(x, z) && gold > 0 && wood > 0) {
+            var buildingName = type === "building" ? "building_" : "house_";
+            var house = BABYLON.MeshBuilder.CreateBox(buildingName + x + "_" + z, {
+                size: houseSize
+            }, scene);
+            house.position.x = newPosX;
+            house.position.y = 1.5;
+            house.position.z = newPosZ;
+            //On utilise darkGreenMaterial pour les buildings et purpleMaterial pour les houses
+            house.material = type === "building" ? materialManager.getMaterial("darkGreenMaterial") : materialManager.getMaterial("purpleMaterial");
+            //Si c'est un building alors on enlève 20 d'or, si c'est une house alors on enlève 10 d'or
+            var goldDeducted = type === "building" ? 20 : 10;
+            gold -= goldDeducted;
+            showMinusNumber(goldDeducted, "goldDisplay");
+            // si c'est une maison en bois on enleve 10 bois sinon 20 bois
+            var woodDeducted = type === "building" ? 20 : 10;
+            wood -= woodDeducted;
+            showMinusNumber(woodDeducted, "woodDisplay");
+            updateWoodDisplay();
+            updateGoldDisplay();
+            var productionIntervalId = startGoldProduction(houseSize);
+            house.productionIntervalId = productionIntervalId;
+            //particules lors de la creation d'un batiment
+            var smoke = createSmokeParticles(new BABYLON.Vector3(house.position.x, house.position.y + houseSize / 2, house.position.z), "house");
+            smoke.start();
+            setTimeout(function () {
+                smoke.stop();
+            }, 50);
 
+            //creation d'un pnj
+            var pnjCount = type === "house" ? 1 : 3;
+            showPlusNumber(pnjCount, "populationDisplay");
+            for (var i = 0; i < pnjCount; i++) {
+                BABYLON.SceneLoader.ImportMesh("", "assets/pnj/pnj.glb", "", scene, function (meshes) {
+                    var model = meshes[0];
+                    pnj = new Pnj(scene, model, house.position);
+                    // Ajoutez le nouveau PNJ au tableau
+                    pnjs.push(pnj);
+                    population += 1;
+                    updatePopulationDisplay();
+                });
+            }
 
+        }
     } else {
         console.log("Impossible de placer la construction ici en raison de la zone d'exclusion.");
     }
 
 }
 
-function deleteHouse(house) {
+function deleteHouse(house, isBuilding) {
     stopGoldProduction(house.productionIntervalId);
     var index = occupiedPositions.findIndex(function (occupiedBuilding) {
         return occupiedBuilding.position.equals(house.position);
@@ -331,6 +489,23 @@ function deleteHouse(house) {
     if (index != -1) {
         occupiedPositions.splice(index, 1);
     }
+    // Déterminez combien de PNJ supprimer en fonction de la taille de la maison
+    var pnjCountToDelete = isBuilding ? 3 : 1;
+
+    showMinusNumber(pnjCountToDelete, "populationDisplay");
+    // Supprimez les PNJ du tableau
+    for (var i = 0; i < pnjCountToDelete; i++) {
+        var pnj = pnjs.pop();
+        if (pnj) {
+            pnj.delete(); // Supprime le PNJ de la scène
+            population -= 1; // Réduit la population
+            updatePopulationDisplay();
+            
+        }
+    }
+
+
+
     house.dispose();
 }
 
@@ -341,6 +516,7 @@ function startGoldProduction(houseSize) {
         return setInterval(function () {
             gold += productionRate;
             updateGoldDisplay();
+            showPlusNumber(productionRate, "goldDisplay");
         }, 1000);
     }
 }
